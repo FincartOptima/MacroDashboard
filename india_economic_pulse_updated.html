@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Economic Pulse: Jan 2025 - May 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals with Navy and Saffron Accents -->
+    <!-- Application Structure Plan: The application uses a dashboard layout to present the three requested metrics. It starts with a high-level summary (KPI cards) for the latest available month (May 2026). The core interaction is a centralized charting area with toggle buttons, allowing users to focus on one metric at a time without overwhelming the screen. A detailed tabular view follows for deep-dive reading. The sources are explicitly listed at the bottom to fulfill the authenticity requirement. -->
+    <!-- Visualization & Content Choices: 
+        1. KPI Cards -> Goal: Inform -> Viz: Large Text + Unicode Icons -> Justification: Immediate top-line visibility of current state.
+        2. Main Trend Chart -> Goal: Change/Compare over time -> Viz: Line/Bar Chart (Chart.js) -> Interaction: Toggle buttons to switch dataset -> Justification: Allows focused trend analysis over the 17-month period.
+        3. Data Table -> Goal: Organize/Inform -> Viz: HTML Table -> Justification: Provides exact figures for reference.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 50vh;
+            max-height: 450px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 40vh;
+                max-height: 350px;
+            }
+        }
+        body {
+            background-color: #FAFAFA;
+            color: #333333;
+        }
+        .tab-btn.active {
+            background-color: #1E3A8A; 
+            color: white;
+            border-color: #1E3A8A;
+        }
+        .tab-btn {
+            background-color: white;
+            color: #4B5563;
+            border-color: #D1D5DB;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased leading-relaxed">
+
+    <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-2xl font-bold text-blue-900">🇮🇳 EconPulse</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#overview" class="text-gray-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium">Overview</a>
+                    <a href="#trends" class="text-gray-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium">Trends</a>
+                    <a href="#data" class="text-gray-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium">Data Table</a>
+                    <a href="#sources" class="text-gray-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium">Sources</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <section id="overview" class="mb-12">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">India Macroeconomic Indicators</h1>
+            <p class="text-lg text-gray-600 mb-8 max-w-4xl">
+                Welcome to the India Economic Pulse Dashboard. This interactive application provides a consolidated view of three critical macroeconomic indicators — GST Collections, Bank Credit Growth, and the USD/INR exchange rate — from January 2025 to May 2026. Data has been updated from the research synthesis using authenticated sources: Ministry of Finance PIB press releases (GST), RBI fortnightly credit bulletins, and FBIL/aggregated interbank rates (INR). The headline story is more complex than it appears: record GST collections are partly an import-inflation artifact, surging credit growth is partly distress borrowing, and the rupee depreciated ~12% in 12 months.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">GST Collection</h2>
+                        <span class="text-2xl">💰</span>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold text-gray-900" id="kpi-gst">₹1.942</span>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Lakh Cr</span>
+                    </div>
+                    <div class="mt-2 text-sm text-green-600 font-medium">
+                        May 2026 (Latest)
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Credit Growth (YoY)</h2>
+                        <span class="text-2xl">📈</span>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold text-gray-900" id="kpi-credit">17.7</span>
+                        <span class="ml-2 text-sm font-medium text-gray-500">%</span>
+                    </div>
+                    <div class="mt-2 text-sm text-gray-500 font-medium">
+                        May 2026 (Latest)
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">USD / INR Rate</h2>
+                        <span class="text-2xl">💱</span>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold text-gray-900" id="kpi-inr">95.50</span>
+                    </div>
+                    <div class="mt-2 text-sm text-red-500 font-medium">
+                        May 2026 (Latest Avg)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="trends" class="mb-16 bg-white p-6 rounded-xl shadow-md">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Trend Analysis</h2>
+                <p class="text-gray-600">
+                    Select a metric below to visualize its monthly trajectory. Notice the typical April spikes in GST collections due to year-end financial closures, and observe the steady trajectory of credit growth reflecting domestic demand.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-6 justify-center">
+                <button onclick="updateChart('gst')" id="btn-gst" class="tab-btn active border px-6 py-2 rounded-full font-medium transition-colors focus:outline-none">
+                    GST Collection (₹ Lakh Cr)
+                </button>
+                <button onclick="updateChart('credit')" id="btn-credit" class="tab-btn border px-6 py-2 rounded-full font-medium transition-colors focus:outline-none">
+                    Credit Growth (%)
+                </button>
+                <button onclick="updateChart('inr')" id="btn-inr" class="tab-btn border px-6 py-2 rounded-full font-medium transition-colors focus:outline-none">
+                    USD/INR Rate
+                </button>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="mainChart"></canvas>
+            </div>
+            
+            <div id="chart-context" class="mt-6 text-center text-sm text-gray-600 max-w-2xl mx-auto bg-gray-50 p-4 rounded-lg border border-gray-100">
+            </div>
+        </section>
+
+        <section id="data" class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Detailed Monthly Data</h2>
+            <p class="text-gray-600 mb-6">
+                Comprehensive tabular view of the metrics from January 2025 to May 2026. Use this table for exact figure references.
+            </p>
+            <div class="overflow-x-auto bg-white rounded-xl shadow-md border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month & Year</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">GST (₹ Lakh Cr)</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Credit Growth (%)</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">USD/INR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="sources" class="mb-8 bg-blue-50 p-6 rounded-xl border border-blue-100">
+            <h2 class="text-xl font-bold text-blue-900 mb-4">Authentic Data Sources & Methodology</h2>
+            <p class="text-sm text-gray-700 mb-4">
+                The data presented in this dashboard represents historical figures up to May 2026. Below are the official, authentic sources where these specific datasets are published by the Government of India and relevant authorities:
+            </p>
+            <ul class="space-y-3 text-sm">
+                <li class="flex items-start">
+                    <span class="mr-2">📄</span>
+                    <div>
+                        <strong>GST Collections:</strong> Ministry of Finance, Government of India (Press Information Bureau). Monthly press releases on gross GST revenue collection. <br>
+                        <a href="https://pib.gov.in/indexd.aspx" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Verify at PIB Portal</a>
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <span class="mr-2">🏦</span>
+                    <div>
+                        <strong>Credit Growth (Sectoral Deployment of Bank Credit):</strong> Reserve Bank of India (RBI). Data is released monthly detailing non-food bank credit YoY growth. <br>
+                        <a href="https://rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Verify at RBI Press Releases</a> or <a href="https://dbie.rbi.org.in/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">RBI DBIE Portal</a>
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <span class="mr-2">💱</span>
+                    <div>
+                        <strong>USD/INR Exchange Rate:</strong> Financial Benchmarks India Pvt. Ltd. (FBIL) and RBI Reference Rates. The figures represent the monthly average reference rate. <br>
+                        <a href="https://www.fbil.org.in/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Verify at FBIL</a>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-500">
+            <p>India Economic Pulse Dashboard &copy; 2026.</p>
+        </div>
+    </footer>
+
+    <script>
+        // GST: converted from ₹ crore to lakh crore (divide by 100000)
+        // Credit: Non-Food Bank Credit YoY % from RBI / ICRA
+        // INR: Monthly Average USD/INR from FBIL / aggregated market data
+        const economyData = [
+            { month: "Jan 2025", gst: 1.955, credit: 11.3, inr: 86.20 },
+            { month: "Feb 2025", gst: 1.836, credit: 11.0, inr: 86.88 },
+            { month: "Mar 2025", gst: 1.961, credit: 10.9, inr: 86.58 },
+            { month: "Apr 2025", gst: 2.367, credit:  9.8, inr: 85.81 },
+            { month: "May 2025", gst: 2.011, credit:  9.8, inr: 85.25 },
+            { month: "Jun 2025", gst: 1.846, credit:  9.9, inr: 85.95 },
+            { month: "Jul 2025", gst: 1.957, credit:  9.9, inr: 86.43 },
+            { month: "Aug 2025", gst: 1.863, credit: 10.0, inr: 87.59 },
+            { month: "Sep 2025", gst: 1.890, credit: 10.2, inr: 88.30 },
+            { month: "Oct 2025", gst: 1.959, credit: 11.1, inr: 88.32 },
+            { month: "Nov 2025", gst: 1.703, credit: 12.0, inr: 88.78 },
+            { month: "Dec 2025", gst: 1.746, credit: 14.5, inr: 90.08 },
+            { month: "Jan 2026", gst: 1.934, credit: 14.4, inr: 90.69 },
+            { month: "Feb 2026", gst: 1.836, credit: 15.2, inr: 90.80 },
+            { month: "Mar 2026", gst: 2.000, credit: 14.2, inr: 93.06 },
+            { month: "Apr 2026", gst: 2.427, credit: 15.8, inr: 93.60 },
+            { month: "May 2026", gst: 1.942, credit: 17.7, inr: 95.50 }
+        ];
+
+        const labels = economyData.map(d => d.month);
+        const gstData = economyData.map(d => d.gst);
+        const creditData = economyData.map(d => d.credit);
+        const inrData = economyData.map(d => d.inr);
+
+        const tableBody = document.getElementById('data-table-body');
+        economyData.forEach((row, index) => {
+            const tr = document.createElement('tr');
+            tr.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${row.month}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-700">${row.gst.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-700">${row.credit.toFixed(1)}%</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-700">${row.inr.toFixed(2)}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        let currentChart;
+
+        const chartContexts = {
+            gst: "<strong>Gross GST Collections (₹ Lakh Cr):</strong> Two distinct April spikes — ₹2.37L Cr in Apr 2025 and a record ₹2.43L Cr in Apr 2026 — reflect year-end compliance surges. Note the Nov 2025 trough (₹1.70L Cr, +0.7% YoY) caused by GST 2.0 rate cuts. Crucially, the late-2026 growth is import-driven (IGST +25.8% YoY in Apr 2026), not domestic consumption, which actually contracted -2.6% by May 2026.",
+            credit: "<strong>Non-Food Bank Credit Growth (YoY %):</strong> Credit growth decelerated sharply from ~11% in early 2025 to ~9.8% by Apr–May 2025, then re-accelerated to a two-year high of 17.7% by May 2026. However, the late surge is distorted by distress borrowing from Oil Marketing Companies (OMCs) bridging crude-oil working capital deficits — not productive capex. The Credit-Deposit ratio hit a strained 82.8% by May 2026.",
+            inr: "<strong>USD/INR Monthly Average Rate:</strong> The rupee appreciated mildly through H1 2025 (peak: 85.25 avg in May 2025), then depreciated aggressively from July 2025 onward — breaching 90 in Dec 2025 and reaching 95.50 by May 2026. This ~12% depreciation in 12 months was driven by the West Asia conflict disrupting Strait of Hormuz, crude oil import inflation, and FPI outflows from EMs. The RBI intervened but couldn't arrest the trend."
+        };
+
+        function initChart() {
+            currentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'GST Collection (₹ Lakh Cr)',
+                        data: gstData,
+                        backgroundColor: '#F97316',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: false }
+                    }
+                }
+            });
+            document.getElementById('chart-context').innerHTML = chartContexts.gst;
+        }
+
+        window.updateChart = function(metric) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + metric).classList.add('active');
+
+            if (metric === 'gst') {
+                currentChart.config.type = 'bar';
+                currentChart.data.datasets[0] = {
+                    label: 'GST Collection (₹ Lakh Cr)',
+                    data: gstData,
+                    backgroundColor: '#F97316',
+                    borderColor: '#F97316',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    fill: false
+                };
+            } else if (metric === 'credit') {
+                currentChart.config.type = 'line';
+                currentChart.data.datasets[0] = {
+                    label: 'Credit Growth (YoY %)',
+                    data: creditData,
+                    backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                    borderColor: '#2563EB',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#1E3A8A'
+                };
+            } else if (metric === 'inr') {
+                currentChart.config.type = 'line';
+                currentChart.data.datasets[0] = {
+                    label: 'USD/INR Rate',
+                    data: inrData,
+                    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                    borderColor: '#22C55E',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#14532D'
+                };
+            }
+            
+            document.getElementById('chart-context').innerHTML = chartContexts[metric];
+            currentChart.update();
+        };
+
+        window.onload = initChart;
+    </script>
+</body>
+</html>
